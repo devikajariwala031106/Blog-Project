@@ -1,0 +1,31 @@
+<div class="flash-container" id="flashContainer">
+  <% if (typeof success !== 'undefined') { %>
+    <% success.forEach(msg => { %>
+    <div class="flash-alert flash-success">
+      <i class="fa-solid fa-circle-check"></i>
+      <span><%= msg %></span>
+      <button class="flash-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <% }) %>
+  <% } %>
+
+  <% if (typeof error !== 'undefined') { %>
+    <% error.forEach(msg => { %>
+    <div class="flash-alert flash-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span><%= msg %></span>
+      <button class="flash-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <% }) %>
+  <% } %>
+
+  <% if (typeof info !== 'undefined') { %>
+    <% info.forEach(msg => { %>
+    <div class="flash-alert flash-info">
+      <i class="fa-solid fa-circle-info"></i>
+      <span><%= msg %></span>
+      <button class="flash-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <% }) %>
+  <% } %>
+</div>

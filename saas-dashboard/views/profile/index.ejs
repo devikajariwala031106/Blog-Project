@@ -1,0 +1,183 @@
+<%- include('../partials/breadcrumb') %>
+
+<div class="profile-header-card">
+  <div class="profile-avatar-wrapper">
+    <div class="profile-avatar">
+      <% if (currentUser && currentUser.avatar) { %>
+        <img src="/uploads/<%= currentUser.avatar %>" alt="avatar">
+      <% } else { %>
+        <%= currentUser ? currentUser.name.charAt(0).toUpperCase() : 'U' %>
+      <% } %>
+    </div>
+    <label for="avatarInput" class="profile-avatar-upload" title="Upload avatar">
+      <i class="fa-solid fa-camera"></i>
+    </label>
+  </div>
+  <div>
+    <div class="profile-name"><%= currentUser ? currentUser.name : 'User' %></div>
+    <div class="profile-role-badge">
+      <i class="fa-solid fa-shield-halved"></i>
+      <%= currentUser ? (currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)) : '' %>
+    </div>
+    <div class="profile-meta">
+      <% if (currentUser && currentUser.email) { %>
+      <span class="profile-meta-item">
+        <i class="fa-regular fa-envelope"></i> <%= currentUser.email %>
+      </span>
+      <% } %>
+      <% if (currentUser && currentUser.phone) { %>
+      <span class="profile-meta-item">
+        <i class="fa-solid fa-phone"></i> <%= currentUser.phone %>
+      </span>
+      <% } %>
+      <% if (currentUser && currentUser.location) { %>
+      <span class="profile-meta-item">
+        <i class="fa-solid fa-location-dot"></i> <%= currentUser.location %>
+      </span>
+      <% } %>
+      <span class="profile-meta-item">
+        <i class="fa-regular fa-calendar"></i>
+        Joined <%= currentUser && currentUser.createdAt ? currentUser.createdAt.toLocaleDateString('en-US', { year:'numeric', month:'long' }) : '' %>
+      </span>
+    </div>
+  </div>
+</div>
+
+<form action="/profile/update-avatar" method="POST" enctype="multipart/form-data" id="avatarForm">
+  <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none;" onchange="document.getElementById('avatarForm').submit()">
+</form>
+
+<div class="profile-tabs">
+  <a href="#" class="profile-tab active" data-target="profileInfoPanel">
+    <i class="fa-solid fa-id-card"></i> Profile Info
+  </a>
+  <a href="#" class="profile-tab" data-target="securityPanel">
+    <i class="fa-solid fa-lock"></i> Security
+  </a>
+  <a href="#" class="profile-tab" data-target="activityPanel">
+    <i class="fa-solid fa-clock-rotate-left"></i> Activity
+  </a>
+</div>
+
+<div id="profileInfoPanel" class="profile-panel">
+  <div class="form-section">
+    <div class="form-card">
+      <form action="/profile/update" method="POST">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+          <i class="fa-solid fa-user" style="color:var(--accent);margin-right:8px;"></i>Personal Information
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label-custom" for="name">
+              <i class="fa-solid fa-id-card" style="margin-right:6px;"></i>Full Name
+            </label>
+            <input type="text" id="name" name="name" class="form-control-custom" value="<%= currentUser ? currentUser.name : '' %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom">
+              <i class="fa-regular fa-envelope" style="margin-right:6px;"></i>Email Address
+            </label>
+            <input type="email" class="form-control-custom" value="<%= currentUser ? currentUser.email : '' %>" disabled style="opacity:0.6;cursor:not-allowed;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label-custom" for="phone">
+              <i class="fa-solid fa-phone" style="margin-right:6px;"></i>Phone Number
+            </label>
+            <input type="tel" id="phone" name="phone" class="form-control-custom" value="<%= currentUser && currentUser.phone ? currentUser.phone : '' %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom" for="location">
+              <i class="fa-solid fa-location-dot" style="margin-right:6px;"></i>Location
+            </label>
+            <input type="text" id="location" name="location" class="form-control-custom" value="<%= currentUser && currentUser.location ? currentUser.location : '' %>" placeholder="City, Country">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-custom" for="bio">
+            <i class="fa-solid fa-align-left" style="margin-right:6px;"></i>Bio
+          </label>
+          <textarea id="bio" name="bio" class="form-control-custom" rows="3" placeholder="Write a short bio..."><%= currentUser && currentUser.bio ? currentUser.bio : '' %></textarea>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary-custom"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="securityPanel" class="profile-panel" style="display:none;">
+  <div class="form-section">
+    <div class="form-card">
+      <form action="/profile/update-password" method="POST">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+          <i class="fa-solid fa-lock" style="color:var(--accent);margin-right:8px;"></i>Change Password
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-custom" for="currentPassword">
+            <i class="fa-solid fa-lock" style="margin-right:6px;"></i>Current Password
+          </label>
+          <input type="password" id="currentPassword" name="currentPassword" class="form-control-custom" placeholder="Enter current password" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label-custom" for="newPassword">
+              <i class="fa-solid fa-lock-open" style="margin-right:6px;"></i>New Password
+            </label>
+            <input type="password" id="newPassword" name="newPassword" class="form-control-custom" placeholder="Min. 6 characters" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label class="form-label-custom" for="confirmPassword">
+              <i class="fa-solid fa-check-double" style="margin-right:6px;"></i>Confirm Password
+            </label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control-custom" placeholder="Repeat new password" required>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary-custom"><i class="fa-solid fa-key"></i> Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="activityPanel" class="profile-panel" style="display:none;">
+  <div class="form-section">
+    <div class="form-card">
+      <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+        <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);margin-right:8px;"></i>Recent Activity
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-dot" style="background:rgba(99,102,241,0.15);color:var(--accent);">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </div>
+          <div class="activity-content">
+            <div class="activity-text"><strong>Profile visit</strong> — You viewed your profile</div>
+            <div class="activity-time"><i class="fa-regular fa-clock"></i> Just now</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:rgba(16,185,129,0.15);color:var(--success);">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="activity-content">
+            <div class="activity-text"><strong>Account secured</strong> — Login verified successfully</div>
+            <div class="activity-time"><i class="fa-regular fa-clock"></i> Session start</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

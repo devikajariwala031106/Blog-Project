@@ -1,0 +1,283 @@
+<%- include('../partials/breadcrumb') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-sliders" style="color:var(--accent);margin-right:10px;"></i>Settings
+    </h1>
+    <p class="page-subtitle">Manage your account preferences and system configuration</p>
+  </div>
+</div>
+
+<div class="settings-tabs" id="settingsTabs">
+  <div class="settings-tab active" data-target="accountPanel">
+    <i class="fa-solid fa-user-gear"></i> Account
+  </div>
+  <div class="settings-tab" data-target="securityPanel">
+    <i class="fa-solid fa-shield-halved"></i> Security
+  </div>
+  <div class="settings-tab" data-target="systemPanel">
+    <i class="fa-solid fa-display"></i> System
+  </div>
+  <div class="settings-tab" data-target="notificationsPanel">
+    <i class="fa-solid fa-bell"></i> Notifications
+  </div>
+</div>
+
+<div id="accountPanel" class="settings-panel">
+  <div class="form-section">
+    <div class="form-card">
+      <form action="/settings/account" method="POST">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+          <i class="fa-solid fa-user-gear" style="color:var(--accent);margin-right:8px;"></i>Account Settings
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Display Name</div>
+            <div class="settings-row-desc">This is how your name appears across the platform</div>
+          </div>
+          <div style="width:280px;">
+            <input type="text" class="form-control-custom" value="<%= currentUser ? currentUser.name : '' %>" name="displayName">
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Email Notifications</div>
+            <div class="settings-row-desc">Receive email updates about your account activity</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" name="emailNotifications" checked>
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Marketing Emails</div>
+            <div class="settings-row-desc">Receive product updates and promotional content</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" name="marketingEmails">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Timezone</div>
+            <div class="settings-row-desc">Set your local timezone for accurate timestamps</div>
+          </div>
+          <div style="width:280px;">
+            <select class="form-control-custom" name="timezone">
+              <option>UTC (GMT+0)</option>
+              <option>America/New_York (GMT-5)</option>
+              <option>America/Los_Angeles (GMT-8)</option>
+              <option>Europe/London (GMT+0)</option>
+              <option>Asia/Kolkata (GMT+5:30)</option>
+              <option>Asia/Tokyo (GMT+9)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary-custom"><i class="fa-solid fa-floppy-disk"></i> Save Account Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="securityPanel" class="settings-panel" style="display:none;">
+  <div class="form-section">
+    <div class="form-card">
+      <form action="/settings/security" method="POST">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+          <i class="fa-solid fa-shield-halved" style="color:var(--accent);margin-right:8px;"></i>Security Settings
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Two-Factor Authentication</div>
+            <div class="settings-row-desc">Add an extra layer of security to your account</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" name="twoFactor">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Login Alerts</div>
+            <div class="settings-row-desc">Get notified when your account is accessed from a new device</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" name="loginAlerts" checked>
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Session Timeout</div>
+            <div class="settings-row-desc">Automatically log out after a period of inactivity</div>
+          </div>
+          <div style="width:280px;">
+            <select class="form-control-custom" name="sessionTimeout">
+              <option>1 hour</option>
+              <option selected>8 hours</option>
+              <option>24 hours</option>
+              <option>7 days</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:20px;margin-top:16px;">
+          <div style="font-size:14px;font-weight:700;color:var(--danger);margin-bottom:8px;">
+            <i class="fa-solid fa-triangle-exclamation" style="margin-right:8px;"></i>Danger Zone
+          </div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">
+            These actions are permanent and cannot be undone. Please proceed with caution.
+          </div>
+          <button type="button" class="btn-danger-custom">
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out All Devices
+          </button>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary-custom"><i class="fa-solid fa-floppy-disk"></i> Save Security Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="systemPanel" class="settings-panel" style="display:none;">
+  <div class="form-section">
+    <div class="form-card">
+      <form action="/settings/system" method="POST">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+          <i class="fa-solid fa-display" style="color:var(--accent);margin-right:8px;"></i>System Preferences
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Theme</div>
+            <div class="settings-row-desc">Choose your preferred color theme</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:#0a0b0f;border:2px solid var(--accent);cursor:pointer;" title="Dark"></div>
+            <div style="width:32px;height:32px;border-radius:8px;background:#f8fafc;border:2px solid var(--glass-border);cursor:pointer;" title="Light"></div>
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-gradient);border:2px solid transparent;cursor:pointer;" title="System"></div>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Compact Mode</div>
+            <div class="settings-row-desc">Reduce spacing and padding for a denser layout</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" name="compactMode">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Animations</div>
+            <div class="settings-row-desc">Enable smooth transitions and micro-animations</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" name="animations" checked>
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-title">Items Per Page</div>
+            <div class="settings-row-desc">Default number of items shown in tables</div>
+          </div>
+          <div style="width:200px;">
+            <select class="form-control-custom" name="itemsPerPage">
+              <option>5</option>
+              <option selected>8</option>
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary-custom"><i class="fa-solid fa-floppy-disk"></i> Save System Preferences</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="notificationsPanel" class="settings-panel" style="display:none;">
+  <div class="form-section">
+    <div class="form-card">
+      <div style="font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);">
+        <i class="fa-solid fa-bell" style="color:var(--accent);margin-right:8px;"></i>Notification Preferences
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <div class="settings-row-title">New User Registrations</div>
+          <div class="settings-row-desc">Be notified when a new user joins the platform</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked>
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <div class="settings-row-title">Product Updates</div>
+          <div class="settings-row-desc">Get alerts when products are added or modified</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked>
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <div class="settings-row-title">Low Stock Alerts</div>
+          <div class="settings-row-desc">Alert when product stock falls below threshold</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked>
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <div class="settings-row-title">System Announcements</div>
+          <div class="settings-row-desc">Maintenance windows and platform updates</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="form-divider"></div>
+      <div class="form-actions">
+        <button type="button" class="btn-primary-custom"><i class="fa-solid fa-floppy-disk"></i> Save Notification Settings</button>
+      </div>
+    </div>
+  </div>
+</div>

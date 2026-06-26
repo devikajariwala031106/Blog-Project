@@ -1,0 +1,70 @@
+<aside class="sidebar" id="appSidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <i class="fa-solid fa-bolt"></i>
+    </div>
+    <div>
+      <div class="logo-text">SaaS<span style="color:var(--accent-light)">Hub</span></div>
+    </div>
+    <span class="logo-badge ms-auto">Pro</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-label">Overview</div>
+      <a href="/dashboard" class="nav-item <%= currentPath === '/dashboard' || (typeof currentPath !== 'undefined' && currentPath.startsWith('/dashboard')) ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-grid-2"></i></span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Management</div>
+      <a href="/users" class="nav-item <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/users') ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+        <span class="nav-label">Users</span>
+      </a>
+      <a href="/categories" class="nav-item <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/categories') ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
+        <span class="nav-label">Categories</span>
+      </a>
+      <a href="/products" class="nav-item <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/products') ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-box-open"></i></span>
+        <span class="nav-label">Products</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Account</div>
+      <a href="/profile" class="nav-item <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/profile') ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>
+        <span class="nav-label">Profile</span>
+      </a>
+      <a href="/settings" class="nav-item <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/settings') ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-sliders"></i></span>
+        <span class="nav-label">Settings</span>
+      </a>
+      <a href="/auth/change-password" class="nav-item <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/auth/change-password') ? 'active' : '' %>">
+        <span class="nav-icon"><i class="fa-solid fa-key"></i></span>
+        <span class="nav-label">Security</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="/profile" class="sidebar-user" style="text-decoration:none;">
+      <div class="sidebar-avatar">
+        <% if (currentUser && currentUser.avatar) { %>
+          <img src="/uploads/<%= currentUser.avatar %>" alt="avatar">
+        <% } else if (currentUser) { %>
+          <%= currentUser.name.charAt(0).toUpperCase() %>
+        <% } %>
+      </div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name"><%= currentUser ? currentUser.name : 'User' %></div>
+        <div class="sidebar-user-role"><%= currentUser ? currentUser.role : '' %></div>
+      </div>
+      <i class="fa-solid fa-ellipsis" style="color:var(--text-muted);font-size:13px;"></i>
+    </a>
+  </div>
+</aside>

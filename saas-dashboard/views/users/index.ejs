@@ -1,0 +1,140 @@
+<%- include('../partials/breadcrumb') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-users" style="color:var(--accent);margin-right:10px;"></i>User Management
+    </h1>
+    <p class="page-subtitle">Manage all platform users, roles, and permissions</p>
+  </div>
+  <a href="/users/add" class="btn-primary-custom">
+    <i class="fa-solid fa-user-plus"></i> Add New User
+  </a>
+</div>
+
+<div class="card">
+  <div style="padding:20px 24px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div class="section-title">
+      <i class="fa-solid fa-list"></i>
+      All Users
+      <span style="font-size:12px;font-weight:400;color:var(--text-muted);margin-left:8px;">(<%= pagination.total %> total)</span>
+    </div>
+
+    <form action="/users" method="GET" class="d-flex gap-2">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          name="search"
+          value="<%= search %>"
+          placeholder="Search users..."
+          id="userSearch"
+        >
+      </div>
+      <button type="submit" class="btn-primary-custom" style="padding:9px 16px;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <% if (search) { %>
+      <a href="/users" class="btn-secondary-custom" style="padding:9px 14px;">
+        <i class="fa-solid fa-xmark"></i>
+      </a>
+      <% } %>
+    </form>
+  </div>
+
+  <% if (users && users.length > 0) { %>
+  <div style="overflow-x:auto;">
+    <table class="custom-table" id="usersTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th><i class="fa-solid fa-user" style="margin-right:6px;"></i>User</th>
+          <th><i class="fa-solid fa-shield-halved" style="margin-right:6px;"></i>Role</th>
+          <th><i class="fa-solid fa-phone" style="margin-right:6px;"></i>Phone</th>
+          <th><i class="fa-solid fa-circle-half-stroke" style="margin-right:6px;"></i>Status</th>
+          <th><i class="fa-regular fa-calendar" style="margin-right:6px;"></i>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach((user, index) => { %>
+        <tr>
+          <td style="color:var(--text-muted);font-size:12px;">
+            <%= ((pagination.currentPage - 1) * pagination.perPage) + index + 1 %>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar-sm">
+                <% if (user.avatar) { %>
+                  <img src="/uploads/<%= user.avatar %>" alt="avatar">
+                <% } else { %>
+                  <%= user.name.charAt(0).toUpperCase() %>
+                <% } %>
+              </div>
+              <div>
+                <div class="user-name-cell"><%= user.name %></div>
+                <div class="user-email-cell"><%= user.email %></div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge-custom badge-<%= user.role %>">
+              <% if (user.role === 'admin') { %><i class="fa-solid fa-crown" style="margin-right:4px;font-size:9px;"></i><% } %>
+              <%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>
+            </span>
+          </td>
+          <td style="color:var(--text-muted);">
+            <%= user.phone || '<span style="color:var(--text-muted);font-style:italic;">—</span>' %>
+          </td>
+          <td>
+            <span class="badge-custom badge-<%= user.status %>">
+              <i class="fa-solid fa-circle" style="font-size:6px;margin-right:5px;"></i>
+              <%= user.status.charAt(0).toUpperCase() + user.status.slice(1) %>
+            </span>
+          </td>
+          <td style="color:var(--text-muted);font-size:12px;">
+            <i class="fa-regular fa-calendar" style="margin-right:5px;"></i>
+            <%= user.createdAt ? user.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—' %>
+          </td>
+          <td>
+            <div class="action-btns">
+              <a href="/users/<%= user._id %>/edit" class="btn-icon btn-edit" title="Edit user">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </a>
+              <button
+                class="btn-icon btn-delete"
+                data-delete-url="/users/<%= user._id %>?_method=DELETE"
+                data-delete-name="<%= user.name %>"
+                title="Delete user"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="padding:0 24px 16px;">
+    <%- include('../partials/pagination') %>
+  </div>
+
+  <% } else { %>
+  <div class="empty-state">
+    <div class="empty-icon"><i class="fa-solid fa-users-slash"></i></div>
+    <div class="empty-title">
+      <%= search ? 'No users found' : 'No users yet' %>
+    </div>
+    <div class="empty-desc">
+      <%= search ? `No results for "${search}". Try a different search.` : 'Get started by adding your first user.' %>
+    </div>
+    <% if (!search) { %>
+    <a href="/users/add" class="btn-primary-custom">
+      <i class="fa-solid fa-user-plus"></i> Add First User
+    </a>
+    <% } %>
+  </div>
+  <% } %>
+</div>

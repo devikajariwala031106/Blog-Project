@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SaaS Management Dashboard — Premium admin panel for modern businesses">
+  <title><%= title ? title + ' — SaaS Dashboard' : 'SaaS Dashboard' %></title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text y='.9em' font-size='80' x='10'>S</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <%- style %>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;backdrop-filter:blur(2px);"></div>
+
+  <%- include('../partials/sidebar') %>
+
+  <div class="main-content">
+    <%- include('../partials/navbar') %>
+
+    <div class="page-content">
+      <%- include('../partials/flash') %>
+      <%- body %>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="/js/main.js"></script>
+<%- script %>
+</body>
+</html>

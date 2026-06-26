@@ -1,0 +1,123 @@
+<%- include('../partials/breadcrumb') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-box-open" style="color:var(--accent);margin-right:10px;"></i>Product Management
+    </h1>
+    <p class="page-subtitle">Manage your product catalog, inventory, and pricing</p>
+  </div>
+  <a href="/products/add" class="btn-primary-custom">
+    <i class="fa-solid fa-plus"></i> Add Product
+  </a>
+</div>
+
+<div class="card">
+  <div style="padding:20px 24px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div class="section-title">
+      <i class="fa-solid fa-list"></i>
+      All Products
+      <span style="font-size:12px;font-weight:400;color:var(--text-muted);margin-left:8px;">(<%= pagination.total %> total)</span>
+    </div>
+    <form action="/products" method="GET" class="d-flex gap-2">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" name="search" value="<%= search %>" placeholder="Search products...">
+      </div>
+      <button type="submit" class="btn-primary-custom" style="padding:9px 16px;"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <% if (search) { %>
+      <a href="/products" class="btn-secondary-custom" style="padding:9px 14px;"><i class="fa-solid fa-xmark"></i></a>
+      <% } %>
+    </form>
+  </div>
+
+  <% if (products && products.length > 0) { %>
+  <div style="overflow-x:auto;">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th><i class="fa-solid fa-image" style="margin-right:6px;"></i>Product</th>
+          <th><i class="fa-solid fa-layer-group" style="margin-right:6px;"></i>Category</th>
+          <th><i class="fa-solid fa-dollar-sign" style="margin-right:6px;"></i>Price</th>
+          <th><i class="fa-solid fa-warehouse" style="margin-right:6px;"></i>Stock</th>
+          <th><i class="fa-solid fa-barcode" style="margin-right:6px;"></i>SKU</th>
+          <th><i class="fa-solid fa-circle-half-stroke" style="margin-right:6px;"></i>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach((product, i) => { %>
+        <tr>
+          <td style="color:var(--text-muted);font-size:12px;"><%= ((pagination.currentPage - 1) * pagination.perPage) + i + 1 %></td>
+          <td>
+            <div class="user-cell">
+              <% if (product.image) { %>
+                <img src="/uploads/<%= product.image %>" class="product-image-preview" alt="<%= product.name %>">
+              <% } else { %>
+                <div class="product-image-placeholder"><i class="fa-solid fa-image"></i></div>
+              <% } %>
+              <div>
+                <div class="user-name-cell"><%= product.name %></div>
+                <div class="user-email-cell" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                  <%= product.description || 'No description' %>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);">
+              <i class="fa-solid fa-tag" style="color:var(--info);font-size:11px;"></i>
+              <%= product.category ? product.category.name : 'Uncategorized' %>
+            </span>
+          </td>
+          <td class="price-cell">$<%= product.price.toFixed(2) %></td>
+          <td>
+            <span class="stock-cell <%= product.stock <= 5 ? 'stock-low' : 'stock-ok' %>">
+              <% if (product.stock <= 5) { %>
+                <i class="fa-solid fa-triangle-exclamation" style="font-size:11px;margin-right:4px;"></i>
+              <% } %>
+              <%= product.stock %>
+            </span>
+          </td>
+          <td>
+            <code style="font-size:11px;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:6px;color:var(--text-muted);">
+              <%= product.sku || '—' %>
+            </code>
+          </td>
+          <td>
+            <span class="badge-custom badge-<%= product.status === 'out_of_stock' ? 'out-of-stock' : product.status %>">
+              <i class="fa-solid fa-circle" style="font-size:6px;margin-right:5px;"></i>
+              <%= product.status === 'out_of_stock' ? 'Out of Stock' : product.status.charAt(0).toUpperCase() + product.status.slice(1) %>
+            </span>
+          </td>
+          <td>
+            <div class="action-btns">
+              <a href="/products/<%= product._id %>/edit" class="btn-icon btn-edit" title="Edit product">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </a>
+              <button class="btn-icon btn-delete"
+                data-delete-url="/products/<%= product._id %>?_method=DELETE"
+                data-delete-name="<%= product.name %>"
+                title="Delete product">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding:0 24px 16px;"><%- include('../partials/pagination') %></div>
+  <% } else { %>
+  <div class="empty-state">
+    <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
+    <div class="empty-title"><%= search ? 'No products found' : 'No products yet' %></div>
+    <div class="empty-desc"><%= search ? `No results for "${search}"` : 'Start adding products to your catalog.' %></div>
+    <% if (!search) { %>
+    <a href="/products/add" class="btn-primary-custom"><i class="fa-solid fa-plus"></i> Add Product</a>
+    <% } %>
+  </div>
+  <% } %>
+</div>

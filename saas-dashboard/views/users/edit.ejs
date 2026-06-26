@@ -1,0 +1,112 @@
+<%- include('../partials/breadcrumb', { breadcrumbs: [{ label: 'Users', url: '/users' }, { label: 'Edit User', url: '#' }] }) %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-user-pen" style="color:var(--accent);margin-right:10px;"></i>Edit User
+    </h1>
+    <p class="page-subtitle">Update user information for <strong style="color:var(--accent-light);"><%= editUser.name %></strong></p>
+  </div>
+  <a href="/users" class="btn-secondary-custom">
+    <i class="fa-solid fa-arrow-left"></i> Back to Users
+  </a>
+</div>
+
+<div class="form-section">
+  <div class="form-card">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--glass-border);">
+      <div class="user-avatar-sm" style="width:52px;height:52px;font-size:20px;border-radius:14px;">
+        <% if (editUser.avatar) { %>
+          <img src="/uploads/<%= editUser.avatar %>" alt="avatar">
+        <% } else { %>
+          <%= editUser.name.charAt(0).toUpperCase() %>
+        <% } %>
+      </div>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:var(--text-primary);"><%= editUser.name %></div>
+        <div style="font-size:13px;color:var(--text-muted);"><%= editUser.email %></div>
+      </div>
+      <span class="badge-custom badge-<%= editUser.role %>" style="margin-left:auto;">
+        <%= editUser.role.charAt(0).toUpperCase() + editUser.role.slice(1) %>
+      </span>
+    </div>
+
+    <form action="/users/<%= editUser._id %>/edit" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom" for="name">
+            <i class="fa-solid fa-id-card" style="margin-right:6px;"></i>Full Name
+          </label>
+          <input type="text" id="name" name="name" class="form-control-custom" value="<%= editUser.name %>" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom" for="email">
+            <i class="fa-regular fa-envelope" style="margin-right:6px;"></i>Email Address
+          </label>
+          <input type="email" id="email" name="email" class="form-control-custom" value="<%= editUser.email %>" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom" for="phone">
+            <i class="fa-solid fa-phone" style="margin-right:6px;"></i>Phone Number
+          </label>
+          <input type="tel" id="phone" name="phone" class="form-control-custom" value="<%= editUser.phone || '' %>">
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom" for="location">
+            <i class="fa-solid fa-location-dot" style="margin-right:6px;"></i>Location
+          </label>
+          <input type="text" id="location" name="location" class="form-control-custom" value="<%= editUser.location || '' %>" placeholder="City, Country">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom" for="role">
+            <i class="fa-solid fa-shield-halved" style="margin-right:6px;"></i>User Role
+          </label>
+          <select id="role" name="role" class="form-control-custom">
+            <option value="user" <%= editUser.role === 'user' ? 'selected' : '' %>>User</option>
+            <option value="manager" <%= editUser.role === 'manager' ? 'selected' : '' %>>Manager</option>
+            <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom" for="status">
+            <i class="fa-solid fa-circle-half-stroke" style="margin-right:6px;"></i>Account Status
+          </label>
+          <select id="status" name="status" class="form-control-custom">
+            <option value="active" <%= editUser.status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="inactive" <%= editUser.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label-custom" for="bio">
+          <i class="fa-solid fa-align-left" style="margin-right:6px;"></i>Bio
+        </label>
+        <textarea id="bio" name="bio" class="form-control-custom" rows="3" placeholder="Short bio about this user..."><%= editUser.bio || '' %></textarea>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary-custom">
+          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+        <a href="/users" class="btn-secondary-custom">
+          <i class="fa-solid fa-xmark"></i> Cancel
+        </a>
+        <button type="button"
+          class="btn-danger-custom ms-auto"
+          data-delete-url="/users/<%= editUser._id %>?_method=DELETE"
+          data-delete-name="<%= editUser.name %>">
+          <i class="fa-solid fa-trash"></i> Delete User
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

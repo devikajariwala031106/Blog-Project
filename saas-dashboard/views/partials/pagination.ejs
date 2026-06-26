@@ -1,0 +1,34 @@
+<% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) { %>
+<div class="d-flex align-items-center justify-content-between mt-4 flex-wrap gap-3">
+  <div class="page-info">
+    Showing <strong><%= ((pagination.currentPage - 1) * pagination.perPage) + 1 %></strong>
+    – <strong><%= Math.min(pagination.currentPage * pagination.perPage, pagination.total) %></strong>
+    of <strong><%= pagination.total %></strong> results
+  </div>
+
+  <div class="pagination-custom">
+    <a href="?page=<%= pagination.prevPage %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
+       class="page-btn <%= !pagination.hasPrev ? 'disabled' : '' %>"
+       aria-label="Previous">
+      <i class="fa-solid fa-chevron-left" style="font-size:11px;"></i>
+    </a>
+
+    <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+      <% if (i === 1 || i === pagination.totalPages || (i >= pagination.currentPage - 1 && i <= pagination.currentPage + 1)) { %>
+        <a href="?page=<%= i %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
+           class="page-btn <%= pagination.currentPage === i ? 'active' : '' %>">
+          <%= i %>
+        </a>
+      <% } else if (i === pagination.currentPage - 2 || i === pagination.currentPage + 2) { %>
+        <span class="page-btn disabled" style="pointer-events:none;">...</span>
+      <% } %>
+    <% } %>
+
+    <a href="?page=<%= pagination.nextPage %><%= typeof search !== 'undefined' && search ? '&search=' + search : '' %>"
+       class="page-btn <%= !pagination.hasNext ? 'disabled' : '' %>"
+       aria-label="Next">
+      <i class="fa-solid fa-chevron-right" style="font-size:11px;"></i>
+    </a>
+  </div>
+</div>
+<% } %>

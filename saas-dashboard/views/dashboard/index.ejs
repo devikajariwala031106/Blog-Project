@@ -1,0 +1,209 @@
+<%- include('../partials/breadcrumb') %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">
+      Welcome back, <strong style="color:var(--accent-light);"><%= currentUser ? currentUser.name : 'User' %></strong>
+      — here is what is happening today
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <div style="font-size:12px;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--glass-border);padding:8px 14px;border-radius:10px;">
+      <i class="fa-regular fa-calendar" style="margin-right:6px;color:var(--accent);"></i>
+      <%= new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+    </div>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card card-indigo">
+    <div class="stat-top">
+      <div class="stat-label">Total Users</div>
+      <div class="stat-icon icon-indigo"><i class="fa-solid fa-users"></i></div>
+    </div>
+    <div class="stat-value"><%= totalUsers %></div>
+    <div class="stat-footer">
+      <span class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> Active</span>
+      <span class="stat-trend-label"><%= activeUsers %> active users</span>
+    </div>
+  </div>
+
+  <div class="stat-card card-cyan">
+    <div class="stat-top">
+      <div class="stat-label">Categories</div>
+      <div class="stat-icon icon-cyan"><i class="fa-solid fa-layer-group"></i></div>
+    </div>
+    <div class="stat-value"><%= totalCategories %></div>
+    <div class="stat-footer">
+      <span class="stat-trend up"><i class="fa-solid fa-circle-check"></i> Live</span>
+      <span class="stat-trend-label">All categories</span>
+    </div>
+  </div>
+
+  <div class="stat-card card-emerald">
+    <div class="stat-top">
+      <div class="stat-label">Total Products</div>
+      <div class="stat-icon icon-emerald"><i class="fa-solid fa-box-open"></i></div>
+    </div>
+    <div class="stat-value"><%= totalProducts %></div>
+    <div class="stat-footer">
+      <span class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> Active</span>
+      <span class="stat-trend-label"><%= activeProducts %> in stock</span>
+    </div>
+  </div>
+
+  <div class="stat-card card-orange">
+    <div class="stat-top">
+      <div class="stat-label">Active Rate</div>
+      <div class="stat-icon icon-orange"><i class="fa-solid fa-chart-pie"></i></div>
+    </div>
+    <div class="stat-value">
+      <%= totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0 %>%
+    </div>
+    <div class="stat-footer">
+      <span class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i></span>
+      <span class="stat-trend-label">User activity rate</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-grid">
+  <div class="card" style="padding:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="section-title">
+        <i class="fa-solid fa-chart-line"></i>
+        User Growth
+      </div>
+      <span style="font-size:12px;color:var(--text-muted);background:var(--bg-card);padding:4px 10px;border-radius:20px;border:1px solid var(--glass-border);">Last 6 months</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="userGrowthChart" data-chart-data="<%= monthlyData %>"></canvas>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div class="card" style="padding:24px;">
+      <div class="section-title" style="margin-bottom:16px;">
+        <i class="fa-solid fa-chart-donut"></i>
+        User Status
+      </div>
+      <div style="height:200px;position:relative;">
+        <canvas id="statusDonutChart"
+          data-active="<%= activeUsers %>"
+          data-total="<%= totalUsers %>">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px;">
+      <div class="section-title" style="margin-bottom:14px;">
+        <i class="fa-solid fa-bolt"></i>
+        Quick Actions
+      </div>
+      <div class="quick-actions">
+        <a href="/users/add" class="quick-action-btn">
+          <i class="fa-solid fa-user-plus" style="background:rgba(99,102,241,0.15);color:var(--accent);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;"></i>
+          Add User
+        </a>
+        <a href="/products/add" class="quick-action-btn">
+          <i class="fa-solid fa-plus" style="background:rgba(16,185,129,0.15);color:var(--success);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;"></i>
+          Add Product
+        </a>
+        <a href="/categories/add" class="quick-action-btn">
+          <i class="fa-solid fa-tag" style="background:rgba(6,182,212,0.15);color:var(--info);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;"></i>
+          New Category
+        </a>
+        <a href="/settings" class="quick-action-btn">
+          <i class="fa-solid fa-sliders" style="background:rgba(245,158,11,0.15);color:var(--warning);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;"></i>
+          Settings
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+  <div class="card" style="padding:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div class="section-title">
+        <i class="fa-solid fa-users"></i>
+        Recent Users
+      </div>
+      <a href="/users" class="btn-secondary-custom" style="font-size:12px;padding:6px 14px;">
+        View All <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
+      </a>
+    </div>
+    <div class="activity-list">
+      <% if (recentUsers && recentUsers.length > 0) { %>
+        <% recentUsers.forEach(user => { %>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:rgba(99,102,241,0.1);color:var(--accent);">
+            <% if (user.avatar) { %>
+              <img src="/uploads/<%= user.avatar %>" style="width:32px;height:32px;border-radius:9px;object-fit:cover;" alt="">
+            <% } else { %>
+              <span style="font-weight:700;font-size:13px;"><%= user.name.charAt(0).toUpperCase() %></span>
+            <% } %>
+          </div>
+          <div class="activity-content">
+            <div class="activity-text"><strong><%= user.name %></strong></div>
+            <div class="activity-time"><i class="fa-regular fa-envelope" style="margin-right:4px;"></i><%= user.email %></div>
+          </div>
+          <span class="badge-custom badge-<%= user.status %>"><%= user.status %></span>
+        </div>
+        <% }) %>
+      <% } else { %>
+      <div class="empty-state" style="padding:30px 16px;">
+        <div class="empty-icon" style="font-size:32px;"><i class="fa-solid fa-users-slash"></i></div>
+        <div class="empty-title">No users yet</div>
+        <a href="/users/add" class="btn-primary-custom" style="font-size:12px;padding:7px 16px;margin-top:10px;">
+          <i class="fa-solid fa-plus"></i> Add First User
+        </a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="padding:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div class="section-title">
+        <i class="fa-solid fa-box-open"></i>
+        Recent Products
+      </div>
+      <a href="/products" class="btn-secondary-custom" style="font-size:12px;padding:6px 14px;">
+        View All <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
+      </a>
+    </div>
+    <div class="activity-list">
+      <% if (recentProducts && recentProducts.length > 0) { %>
+        <% recentProducts.forEach(product => { %>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:rgba(16,185,129,0.1);color:var(--success);overflow:hidden;">
+            <% if (product.image) { %>
+              <img src="/uploads/<%= product.image %>" style="width:32px;height:32px;border-radius:9px;object-fit:cover;" alt="">
+            <% } else { %>
+              <i class="fa-solid fa-box"></i>
+            <% } %>
+          </div>
+          <div class="activity-content">
+            <div class="activity-text"><strong><%= product.name %></strong></div>
+            <div class="activity-time">
+              <i class="fa-solid fa-tag" style="margin-right:4px;"></i>
+              <%= product.category ? product.category.name : 'Uncategorized' %>
+            </div>
+          </div>
+          <span style="font-weight:700;font-size:13px;color:var(--success);">$<%= product.price.toFixed(2) %></span>
+        </div>
+        <% }) %>
+      <% } else { %>
+      <div class="empty-state" style="padding:30px 16px;">
+        <div class="empty-icon" style="font-size:32px;"><i class="fa-solid fa-box-open"></i></div>
+        <div class="empty-title">No products yet</div>
+        <a href="/products/add" class="btn-primary-custom" style="font-size:12px;padding:7px 16px;margin-top:10px;">
+          <i class="fa-solid fa-plus"></i> Add First Product
+        </a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
