@@ -45,5 +45,3 @@
 * ⚡ Configured dotenv, Nodemon, Static Assets, and Express Middleware for a smooth development workflow.
 
 * 💻 Maintained clean, modular, reusable, and production-ready code throughout the project.
-
-* 🚫 No comments were used in any source code files, following clean production coding practices.
